@@ -69,6 +69,20 @@ See the spec folder for more in-depth examples.
          #<ZeroDivisionError: divided by 0>,
          #<ArgumentError: wrong number of arguments>]"
 
+== Installing and Building
+
+To install via RubyGems (from http://rubygems.org)
+
+  gem install eor
+  
+To build the gem from these sources:
+
+  rake build
+
+To install the gem from these sources:
+
+  rake install
+
 == Contact
 
 Questions, comment, suggestions, and flames can be sent to mailto:ben@benweissmann.com
