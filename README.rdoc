@@ -2,6 +2,8 @@
 
 http://github.com/benweissmann/eor
 
+By Ben Weissmann, mailto:ben@benweissmann.com
+
 Adds Proc#eor, which takes an arbitrary number of procs and an optional backup value,
 and returns the result of the first Proc that doesn't throw an error.
 
@@ -11,11 +13,11 @@ If all Procs throw errors, eor returns nil.
 
 == Usage
 
-See the +spec/+ folder for more in-depth examples.
+See the spec folder for more in-depth examples.
 
 === Basics
   
-  proc{ 'bI' }.eor
+  proc{ 'brevity' }.eor
   # => "brevity"
   
   proc { not_a_method }.eor
@@ -63,15 +65,17 @@ See the +spec/+ folder for more in-depth examples.
   # => #<ArgumentError: wrong number of arguments>
   
   proc { not_a_method }.eor proc {10 / 0 }, proc { system }, proc {|*errs| errs.inspect}
-  # => "[#<NameError: undefined local variable or method `not_a_method' for main:Object>, #<ZeroDivisionError: divided by 0>, #<ArgumentError: wrong number of arguments>]"
+  # => "[#<NameError: undefined local variable or method `not_a_method' for main:Object>,
+         #<ZeroDivisionError: divided by 0>,
+         #<ArgumentError: wrong number of arguments>]"
 
 == Contact
 
-Questions, comment, suggestions, and flames can be sent to benweissmann@gmail.com
+Questions, comment, suggestions, and flames can be sent to mailto:ben@benweissmann.com
 
 == Contribute
 
-Have a patch? Email it to benweissmann@gmail.com or fork me and submit a pull request.
+Have a patch? Email it to mailto:ben@benweissmann.com or fork me and submit a pull request.
 
 == Copyright
 
