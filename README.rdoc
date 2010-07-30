@@ -1,16 +1,77 @@
-= eor
+= EOr
 
-Description goes here.
+http://github.com/benweissmann/eor
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+Adds Proc#eor, which takes an arbitrary number of procs and an optional backup value,
+and returns the result of the first Proc that doesn't throw an error.
+
+Procs recive as arguments all previous errors.
+
+If all Procs throw errors, eor returns nil.
+
+== Usage
+
+See the +spec/+ folder for more in-depth examples.
+
+=== Basics
+  
+  proc{ 'bI' }.eor
+  # => "brevity"
+  
+  proc { not_a_method }.eor
+  # => nil
+
+=== With Backup Values
+  
+  proc { not_a_method }.eor proc { 'is' }
+  # => "is"
+
+  proc { not_a_method }.eor do
+    'the'
+  end
+  # => "the"
+  
+  proc { not_a_method }.eor 'soul'
+  # => "soul"
+  
+  proc { not_a_method }.eor proc {10 / 0}
+  # => nil
+
+=== With Many Procs
+
+  proc { not_a_method }.eor proc { 10 / 0 }, proc { system }, 'of'
+  # => "of"
+  
+  proc { not_a_method }.eor proc {10 / 0 }, proc { 'wit' }, proc { $foo = true }
+  # => "wit"
+  
+  $foo # foo wasn't set by the previous line, becuase a successful proc was found first.
+  # => nil 
+  
+  proc { not_a_method }.eor proc {10 / 0 }, proc { '--Shakespeare' }, proc { " " }
+  # => "--Shakespeare"
+  
+  proc { not_a_method }.eor proc {10 / 0 }, proc { system }
+  # => nil
+  
+=== Using the Previous Errors
+
+  proc { not_a_method }.eor proc {10 / 0 }, proc { system }, proc {|e| e}
+  # => #<NameError: undefined local variable or method `not_a_method' for main:Object>
+  
+  proc { not_a_method }.eor proc {10 / 0 }, proc { system }, proc {|*errs| errs.last}
+  # => #<ArgumentError: wrong number of arguments>
+  
+  proc { not_a_method }.eor proc {10 / 0 }, proc { system }, proc {|*errs| errs.inspect}
+  # => "[#<NameError: undefined local variable or method `not_a_method' for main:Object>, #<ZeroDivisionError: divided by 0>, #<ArgumentError: wrong number of arguments>]"
+
+== Contact
+
+Questions, comment, suggestions, and flames can be sent to benweissmann@gmail.com
+
+== Contribute
+
+Have a patch? Email it to benweissmann@gmail.com or fork me and submit a pull request.
 
 == Copyright
 
