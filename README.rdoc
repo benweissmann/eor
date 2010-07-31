@@ -11,6 +11,35 @@ Procs recive as arguments all previous errors.
 
 If all Procs throw errors, eor returns nil.
 
+== Examples
+
+The original use case was parsing dates. I had some data about start and end times that had nicely formatted dates that Date.parse() could handle, such as "2010-09-01 12:12:12". However, if the date didn't exist (for example, something that's still going on wouldn't have an end date), the data would be all zeros, like "0000-00-00 00:00:00". Date.parse would choke on this and throw an error. So I had to do:
+
+  begin
+    date = Date.parse(string)
+  rescue
+    date = nil
+  end
+
+with eor, I can do:
+
+  proc{ Date.parse(string) }.eor
+
+And if I had wanted to use the current date as a backup, I could have done
+
+  proc{ Date.parse(string) }.eor Date.new
+
+You can use it for multiple libraries that provide the same functions. For example, hpricot and nokogiri are both XML libraries. If my code needs either one (but I don't care which), I can use
+
+  proc{ require 'hpricot' }.eor { require 'nokogiri' }
+
+That way, if the user has hpricot, it'll use that, and if not, it'll use nokogiri.
+
+You can can also use it for easy error handling. Let's say you're writing something like irb, and you want to take some string of Ruby code and either display the result of that code, or the error it generated. You could do
+
+  result = proc{ eval(string) }.eor {|error| error}
+  puts result
+
 == Usage
 
 See the spec folder for more in-depth examples.
